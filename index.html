@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>إخطار رحلة سياحية</title>
+<style>
+:root{--bg:#f3f1ec;--card:#fff;--ink:#1c2430;--mut:#667085;--line:#d9d5cb;--acc:#0f5c6e;--accfg:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12171d;--card:#1b222b;--ink:#e8ebef;--mut:#9aa4b2;--line:#303a47;--acc:#4fb3c8;--accfg:#08202a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12171d;--card:#1b222b;--ink:#e8ebef;--mut:#9aa4b2;--line:#303a47;--acc:#4fb3c8;--accfg:#08202a;color-scheme:dark}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Tahoma,"Segoe UI",Arial,sans-serif;line-height:1.6}
+.app{max-width:900px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:4px 0 14px}
+h2{font-size:15px;margin:0 0 10px;color:var(--acc)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:12px}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+label{display:block;font-size:12.5px;color:var(--mut)}
+input,select,textarea{width:100%;margin-top:3px;padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font:inherit;font-size:14px}
+.chk{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:6px}
+.chk label{display:flex;align-items:center;gap:5px;color:var(--ink);font-size:14px}
+.chk input{width:auto;margin:0}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+button{font:inherit;font-size:14px;padding:9px 16px;border-radius:6px;border:1px solid var(--acc);background:transparent;color:var(--acc);cursor:pointer}
+button.p{background:var(--acc);color:var(--accfg)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.pv{overflow-x:auto;padding:8px 0}
+.note{font-size:12px;color:var(--mut);margin-top:6px}
+.warn{color:#b42318;font-weight:bold}
+.miss{border:1px solid;border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:14px;line-height:1.7}
+.miss.blk{background:#fdecea;color:#7a1410;border-color:#b42318}
+.miss.wrn{background:#fff6e0;color:#6b4700;border-color:#c98a00}
+.bad{outline:2px solid #b42318!important;border-color:#b42318!important}
+.hi{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding:8px 0;font-size:13.5px}
+.st{display:flex;flex-wrap:wrap;gap:16px;font-size:14px;margin-bottom:6px}
+details summary{cursor:pointer;color:var(--acc);font-size:14px}
+/* ورقة الإخطار */
+.sheet{background:#fff;color:#000;width:210mm;min-height:297mm;padding:10mm 12mm;margin:0 auto 12px;font-size:12.5px;line-height:1.5;border:1px solid #bbb;page-break-after:always;color-scheme:light}
+.sheet h3{text-align:center;text-decoration:underline;font-size:17px;margin:0 0 8px}
+.sheet table{width:100%;border-collapse:collapse;margin-bottom:6px}
+.sheet td{border:1px solid #000;padding:4px 6px;vertical-align:middle}
+.sheet .b{font-weight:bold}.sheet .u{text-decoration:underline;font-weight:bold;margin:8px 0 3px}
+.sheet .c{text-align:center}
+.sig{display:flex;gap:10px;margin-top:8px;align-items:flex-start}
+.box{border:1px solid #000;padding:6px;min-height:80px;flex:1;font-size:12px}
+.box.t{text-align:center;min-height:110px}
+.ap{display:flex;gap:6px;margin-top:10px}
+.ap .box{min-height:150px;text-align:center;font-size:11.5px}
+.ck{font-family:Arial,sans-serif;font-size:14px}
+@page{size:A4;margin:0}
+@media print{
+ :root{--bg:#fff}
+ body{background:#fff}
+ .app>*:not(#out){display:none!important}
+ .app{padding:0;max-width:none}
+ .pv{overflow:visible;padding:0}
+ .sheet{border:0;margin:0;width:210mm;min-height:297mm}
+ #out>h2{display:none}
+}
+</style>
+<style>
+.s2{background:#fff;color:#000;width:210mm;height:297mm;padding:12mm 12mm 10mm;margin:0 auto 12px;font-size:12px;line-height:1.45;border:1px solid #bbb;display:flex;flex-direction:column;overflow:hidden;page-break-after:always;color-scheme:light}
+.s2:last-child{page-break-after:auto}
+.s2 table{width:100%;border-collapse:collapse;margin:0 0 4px}
+.s2 td{border:1px solid #000;padding:3px 6px;vertical-align:middle}
+.s2 .b{font-weight:bold}.s2 .c{text-align:center}
+.s2 .t{text-align:center;text-decoration:underline;font-size:17px;margin:4px 0 14px}
+.s2 .ad{display:flex;justify-content:space-between;font-size:13px}
+.s2 .h{display:flex;justify-content:space-between;align-items:center;font-weight:bold;font-size:14px;margin:6px 0 3px}
+.s2 .db{border:1px solid #000;padding:2px 10px;font-size:12px;font-weight:normal}
+.s2 .bl{color:#1f2fb5;font-weight:bold}
+.s2 .sg{display:flex;gap:14px;margin:6px 0 8px;align-items:flex-start}
+.s2 .sr{flex:0 0 36%}
+.s2 .stamp{border:1px solid #000;text-align:center;padding:14px 0;margin:8px 0}
+.s2 .dt{border:1px solid #000;padding:3px 10px;display:inline-block;font-size:11px}
+.s2 .sb{border:1px solid #000;padding:6px;width:40%}
+.s2 .ap{display:flex;gap:10px;margin-top:auto}
+.s2 .apb{border:1px solid #000;flex:0 0 31%;padding:6px;text-align:center;font-size:11.5px;height:55mm;color:#1f2fb5;font-weight:bold}
+.s2 .ln{margin-top:8px;text-align:right}
+@media print{.s2{border:0;margin:0}}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>إخطار رحلة سياحية</h1>
+
+<div class="card"><details><summary>استيراد البيانات من الـ AI</summary>
+<div class="note">انسخ البرومبت، ابعته للـ AI مع نص الحجز، وهيرجعلك JSON. الصقه هنا.</div>
+<div class="row"><button id="cpPrompt">نسخ البرومبت</button></div>
+<label style="margin-top:8px">الصق الـ JSON هنا<textarea id="jsonIn" rows="6" dir="ltr"></textarea></label>
+<div class="row"><button class="p" id="applyJson">تطبيق البيانات</button></div>
+<div class="note" id="jmsg"></div></details></div>
+
+<div class="card"><h2>البيانات الثابتة</h2>
+<div class="g">
+<label>اسم شركة السياحة<input id="coName" value="اف تي اس ترافيل"></label>
+<label>رقم الترخيص<input id="lic" value="2428"></label>
+<label>مقدم الإخطار<input id="subName" value="محمد صالح"></label>
+<label>رقم البطاقة<input id="subId" value="1502435"></label>
+<label>الجنسية في فورم GPS<input id="gfNat" value="ألمانيا"></label>
+</div></div>
+
+<div class="card"><h2>الرحلة</h2>
+<div class="g">
+<label>تاريخ الرحلة<input type="date" id="date"></label>
+<label>نوع الرحلة<select id="ttype"><option>اوفر داي</option><option>اوفر نايت</option><option>توصيلة</option></select></label>
+<input id="tcity" type="hidden">
+<label>عدد السائحين<input id="pax" inputmode="numeric"></label>
+<label>الجنسية<input id="nat"></label>
+<label>اسم المندوب / المرشد<input id="guide"></label>
+<label>تليفون المندوب / المرشد<input id="gphone" inputmode="tel"></label>
+<label>البرنامج / أماكن الإقامة<textarea id="prog" rows="2"></textarea></label>
+<label id="progExtraL" style="display:none">إضافة برنامج للتوصيلة (اختياري)<textarea id="progExtra" rows="2"></textarea></label>
+<label>من (بداية الرحلة)<select id="gfFrom"></select></label>
+<label>إلى (الوجهة)<select id="gfSel"><option>القاهرة</option><option>الأقصر</option><option>أسوان</option><option value="__o">أخرى...</option></select><input id="gfOther" placeholder="اكتب الوجهة" style="display:none"><input type="hidden" id="gfTo" value="القاهرة"></label>
+</div>
+<div class="row" style="margin-top:8px"><button id="progReset">إعادة البرنامج الافتراضي للوجهة</button><button id="progSave">حفظ البرنامج الحالي كافتراضي للوجهة</button></div>
+<div class="note" id="progmsg">البرنامج بيتكتب تلقائي حسب الوجهة (الاتجاه)، وتقدر تعدله على الرحلة نفسها.</div>
+<div class="chk" id="dirs" style="display:none"></div>
+<label style="margin-top:10px">منفذ الخروج</label>
+<div class="chk" id="exits"></div>
+<div class="g" style="margin-top:10px">
+<label>الذهاب (الساعة)<input id="tgo" placeholder="6:00"></label>
+<label>العودة (الساعة)<input id="tret" placeholder="17:00"></label>
+</div></div>
+
+<div class="card"><h2>السيارة</h2>
+<label>بحث في السيارات المحفوظة (رقم السيارة أو اسم السائق)
+<input id="q" list="carlist" autocomplete="off"></label><datalist id="carlist"></datalist>
+<div class="g" style="margin-top:10px">
+<label>شركة النقل<input id="tco"></label>
+<label>نوع السيارة<select id="ctype"><option value="">اختر</option><option>ليموزين</option><option>ميكروباص</option><option>كوستر</option><option>اتوبيس</option></select></label>
+<label>رقم السيارة<input id="cnum"></label>
+<label>رقم الشاسيه<input id="chassis" dir="ltr"></label>
+<label>لوحة العربية (حروف وأرقام)<input id="plate"></label>
+<label>رقم السائق (واتساب)<input id="dphone" inputmode="tel" dir="ltr"></label>
+<label>السائق الاحتياطي<input id="bdriver"></label>
+<label>رقم السائق الاحتياطي<input id="bphone" inputmode="tel" dir="ltr"></label>
+<label>الجهة التابعة لها<input id="cbelong"></label>
+<label>السائق الأساسي<input id="driver"></label>
+</div>
+<div class="row"><button id="savecar">حفظ السيارة</button><button id="delcar">حذف السيارة المحفوظة</button></div>
+<div class="note">السيارات المحفوظة تتخزن في هذا المتصفح فقط.</div>
+<div class="note warn" id="warn"></div>
+</div>
+
+<div id="miss" class="miss" role="alert" style="display:none"></div>
+<div class="row" style="margin-bottom:12px">
+<button class="p" id="save">حفظ وتأكيد</button>
+<button class="p" id="print">طباعة الإخطار</button>
+<button class="p" id="gfSend">تسجيل في GPS</button>
+<button id="gfOpen">فتح فورم GPS متملّي</button>
+<button id="reset">رحلة جديدة</button>
+<div class="note" id="gfmsg" style="flex-basis:100%"></div>
+</div>
+
+<div class="card"><h2>تصاريح آخر 72 ساعة</h2>
+<div class="row" style="margin:0 0 8px;align-items:end"><label>تاريخ الرحلة (للمراجعة)<input type="date" id="hfDate"></label><button id="hfToday">اليوم</button><button id="hfYest">أمس</button><button id="hfAll">الكل</button></div>
+<div class="st" id="stats"></div>
+<div id="costBox"></div>
+<details style="margin:8px 0"><summary>أسعار العربيات (تقدر تعدّلها)</summary><div class="g" style="margin-top:8px"><label>ليموزين<input class="prc" data-t="ليموزين" inputmode="numeric"></label><label>ميكروباص<input class="prc" data-t="ميكروباص" inputmode="numeric"></label><label>كوستر<input class="prc" data-t="كوستر" inputmode="numeric"></label><label>اتوبيس<input class="prc" data-t="اتوبيس" inputmode="numeric"></label></div></details>
+<div id="hist"></div></div>
+
+<div id="out"><h2>معاينة (3 نسخ: تأمين الأفواج، الغرفة، مكتب الوزارة)</h2><div class="pv" id="pv"></div></div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const DIRS=["القاهره","الإسكندريه","شرم الشيخ","الأقصر","أسوان"];
+const EXITS=["كمين الجونه","كمين سفاجا - قنا","كمين مرسى علم - إدفو"];
+const TEXT=["coName","lic","subName","subId","date","ttype","tcity","pax","nat","guide","gphone","prog","tgo","tret","tco","ctype","cnum","cbelong","driver","chassis","plate","dphone","gfFrom","gfTo","gfNat","progExtra","bdriver","bphone"];
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function mk(box,arr,name){$(box).innerHTML=arr.map((v,i)=>`<label><input type="checkbox" data-g="${name}" value="${i}"> ${v}</label>`).join("")}
+mk("dirs",DIRS,"d");mk("exits",EXITS,"e");
+function lsGet(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function state(){const s={};TEXT.forEach(k=>s[k]=$(k).value);
+ s.d=[...document.querySelectorAll('[data-g=d]')].map(x=>x.checked);
+ s.e=[...document.querySelectorAll('[data-g=e]')].map(x=>x.checked);
+ s.progOut=(s.ttype==="توصيلة")?[({"الأقصر":"رست 85","القاهرة":"رست الزعفرانة"})[s.gfTo]||"",(s.progExtra||"").trim()].filter(Boolean).join(" + "):s.prog;return s}
+function fmt(d){if(!d)return"      /      /";const[a,b,c]=d.split("-");return`${+c} / ${+b} / ${a}`}
+function today(){const n=new Date();return`${n.getDate()} / ${n.getMonth()+1} / ${n.getFullYear()}`}
+const cb=on=>`<span class="ck">${on?"&#9745;":"&#9744;"}</span>`;
+function sheet(s,n){
+ const addr=n==1?"السيد / مدير إدارة تأمين الأفواج السياحية":"السيد الأستاذ / مدير عام مكتب وزارة السياحة بالبحر الأحمر";
+ const fixed=n==1?"":`<div style="float:right" class="b">نموذج رقم (6)</div>`;
+ const city=s.tcity||(s.gfFrom&&s.gfFrom!=="الغردقة"?s.gfFrom:"");
+ const kind=esc(s.ttype)+(city?" "+esc(city):"");
+ const ap1=`<div class="box"><div class="b">الاعتماد الأمني لإدارة تأمين الأفواج السياحية بالإدارة العامة لشرطة السياحة والآثار</div><div>بتمام المراجعة الأمنية والقانونية</div><br>التوقيع : ..................<br>الختم :</div>`;
+ const ap2=`<div class="box"><div class="b">الاعتماد النهائي لمكتب وزارة السياحة بالبحر الأحمر</div><div>بتمام المراجعة النهائية</div><br>التوقيع : ..................<br>الختم :</div><div class="box"><div class="b">اعتماد فرع غرفة شركات ووكالات السفر والسياحة بالبحر الأحمر</div><div>بتمام المراجعة الإدارية والفنية</div><br>مراجع : ..................<br>الختم :</div>`+ap1;
+ return `<section class="sheet">
+ <h3>إخطار عن رحله سياحيه إختياريه</h3>${fixed}
+ <div class="b" style="text-align:left;direction:rtl">${addr}</div>
+ <div class="c b" style="margin:4px 0">نتقدم لسيادتكم بإخطارنا عن تنظيم رحله سياحيه</div>
+ <table><tr><td class="c b" style="width:25%">تاريخ الرحله</td><td class="c b">${fmt(s.date)}</td></tr></table>
+ <div class="u">بيانات شركة السياحه:</div>
+ <table>
+ <tr><td class="b" style="width:20%">إسم شركة السياحة :</td><td>${esc(s.coName)}</td><td class="b" style="width:16%">رقم الترخيص :</td><td class="b c" style="width:14%">${esc(s.lic)}</td></tr>
+ <tr><td class="b">عدد السائحين :</td><td>${esc(s.pax)}</td><td class="b">الجنسية :</td><td>${esc(s.nat)}</td></tr>
+ <tr><td class="b">اسم المندوب / المرشد المرافق :</td><td>${esc(s.guide)}</td><td class="b">رقم تليفون المندوب / المرشد :</td><td>${esc(s.gphone)}</td></tr></table>
+ <div class="u">بيانات شركة النقل</div>
+ <table>
+ <tr><td class="b" style="width:20%">إسم شركة النقل :</td><td colspan="3">${esc(s.tco)}</td></tr>
+ <tr><td class="b" rowspan="2">نوع السياره:</td><td rowspan="2">${esc(s.ctype)}</td><td class="b" style="width:16%">رقم السياره :</td><td>${esc(s.cnum)}</td></tr>
+ <tr><td class="b">الجهه التابعه لها :</td><td>${esc(s.cbelong)}</td></tr>
+ <tr><td class="b">السائق الاساسي</td><td colspan="3">${esc(s.driver)}</td></tr></table>
+ <div class="u">بيانات الرحلة</div>
+ <table>
+ <tr><td class="b" style="width:16%">نوع الرحله :</td><td class="c b" style="width:22%;font-size:15px">${kind}</td><td class="b" style="width:16%">البرنامج / أماكن الإقامه :</td><td>${esc(s.prog).replace(/\n/g,"<br>")}</td></tr>
+ <tr><td class="b">الإتجاه :</td><td colspan="3">${DIRS.map((v,i)=>cb(s.d[i])+" "+v).join(" &nbsp; ")}</td></tr>
+ <tr><td class="b">منفذ الخروج :</td><td colspan="3">${EXITS.map((v,i)=>cb(s.e[i])+" "+v).join(" &nbsp; ")}</td></tr>
+ <tr><td class="b">توقيت الخروج من المنفذ :</td><td colspan="3"><b>الذهاب:</b> ${esc(s.tgo)} &nbsp;&nbsp; <b>العوده:</b> ${esc(s.tret)}<br><small>طريق القاهره مفتوح طوال 24 ساعه. طريق (سفاجا-الأقصر ومرسى علم - إدفو) مفتوح من الساعه 6 حتى 18 يوميا.</small></td></tr>
+ <tr><td colspan="4" class="b c">مع ملاحظة ضرورة الإلتزام بمرور السياره فى الذهاب والعوده من منفذ الخروج فى الميعاد المحدد مسبقا من قبل الشركه والمدون بإخطارها والمثبت بتصريح المرور</td></tr></table>
+ <div class="sig">
+  <div class="box"><div class="b c"><u>مقدم الإخطار</u></div>الإســم : <b>${esc(s.subName)}</b><br>التوقيع :<br>رقم البطاقه : <b>${esc(s.subId)}</b></div>
+  <div style="flex:1"><div>توقيع مدير الشركه : ..................</div><div class="box t" style="margin-top:6px">ختم الشركه</div><div class="box" style="min-height:0;margin-top:6px">تحريرا فى : <b>${today()}</b></div></div>
+ </div>
+ <div class="ap">${n==1?ap1:ap2}</div>
+ </section>`}
+function sheetN(s,n){
+ const AD=["السيد / مدير إدارة تأمين الأفواج السياحية","السيد الأستاذ / أمين عام فرع غرفة شركات ووكالات السفر والسياحة بالبحر الأحمر","السيد الأستاذ / مدير عام مكتب وزارة السياحة بالبحر الأحمر"][n-1];
+ const city=s.tcity||(s.gfFrom&&s.gfFrom!=="الغردقة"?s.gfFrom:"");
+ const kind=esc(s.ttype)+(city?" "+esc(city):"");
+ const tw=s.ttype==="توصيلة";
+ const t=`<b>الذهاب:</b> ${esc(s.tgo)}${tw?"":"<br><b>العوده:</b> "+esc(s.tret)}`,tb=`<b>الذهاب:</b> :${tw?"":"<br><b>العوده:</b> :"}`;
+ const ln=l=>`<div class="ln">${l} ..........................</div>`;
+ const sec=`<div class="apb">الإعتماد الأمنى لإدارة تأمين الأفواج السياحية بالإدارة العامة لشرطة السياحة والآثار<br><u>بتمام المراجعة الأمنية والقانونية</u>${ln("التوقيع :")}<br>الختم :</div>`;
+ const cha=`<div class="apb">إعتماد فرع غرفة شركات ووكالات السفر والسياحة بالبحر الأحمر<br><u>بتمام المراجعة الإدارية والفنية</u>${ln("مراجع :")}${ln("مدخل بيانات :")}${ln("رئيس القسم :")}<br>الختم :</div>`;
+ const min=`<div class="apb">الإعتماد النهائى لمكتب وزارة السياحة بالبحر الأحمر<br><u>بتمام المراجعة النهائية</u>${ln("التوقيع :")}<br>الختم :</div>`;
+ const aps=[sec,cha,min].slice(0,n).join("");
+ return `<section class="s2">
+ <div class="t">إخطار عن رحله سياحيه إختياريه</div>
+ <div class="ad"><b>${AD}</b>${n>1?'<b>نموذج رقم (6)</b>':''}</div>
+ <div class="c b" style="margin:2px 0 6px">نتقدم لسيادتكم بإخطارنا عن تنظيم رحله سياحيه</div>
+ <div class="h"><span>■ بيانات شركة السياحه:</span><span class="db">تاريخ الرحله &nbsp;&nbsp; ${fmt(s.date)}</span></div>
+ <table>
+ <tr><td class="b" style="width:22%">إسم شركة السياحة :</td><td class="c" style="width:34%">${esc(s.coName)}</td><td class="b" style="width:20%">رقم الترخيص :</td><td class="b c" style="width:24%">${esc(s.lic)}</td></tr>
+ <tr><td class="b">عدد السائحين :</td><td>${esc(s.pax)}</td><td class="b">الجنسية :</td><td>${esc(s.nat)}</td></tr>
+ <tr><td class="b">اسم المندوب / المرشد المرافق :</td><td>${esc(s.guide)}</td><td class="b">رقم تليفون المندوب / المرشد :</td><td>${esc(s.gphone)}</td></tr></table>
+ <div class="h"><span>■ <u>بيانات شركة النقل</u></span></div>
+ <table>
+ <tr><td class="b" style="width:22%">إسم شركة النقل :</td><td colspan="3">${esc(s.tco)}</td></tr>
+ <tr><td class="b" rowspan="2">نوع السياره:</td><td rowspan="2">${esc(s.ctype)}</td><td class="b" style="width:20%">رقم السياره :</td><td style="width:24%">${esc(s.cnum)}</td></tr>
+ <tr><td class="b">الجهه التابعه لها :</td><td>${esc(s.cbelong)}</td></tr>
+ <tr><td class="b">السائق الاساسي &nbsp; ${esc(s.driver)}</td><td>${esc(s.dphone)}</td><td>${esc(s.bdriver)}</td><td>${esc(s.bphone)}</td></tr></table>
+ <div class="h"><u>بيانات الرحلة</u></div>
+ <table>
+ <tr><td class="b" style="width:16%">نوع الرحله :</td><td class="c b" style="width:34%;font-size:15px">${kind}</td><td class="b" style="width:14%">البرنامج / أماكن الإقامه :</td><td style="width:36%;font-size:11px">${esc(s.progOut).replace(/\n/g,"<br>")}</td></tr>
+ <tr><td class="b">الإتجاه :</td><td colspan="3">${DIRS.map((v,i)=>cb(s.d[i])+" "+v).join(" &nbsp; ")}</td></tr>
+ <tr><td class="b">منفذ الخروج :</td><td colspan="2" class="c">${cb(s.e[0])} ${EXITS[0]}</td><td class="c">${cb(s.e[1])} ${EXITS[1]} &nbsp; ${cb(s.e[2])} ${EXITS[2]}</td></tr>
+ <tr><td class="b">توقيت الخروج من المنفذ :</td><td colspan="2">${s.e[0]?t:tb}<br><small>طريق القاهره مفتوح طوال 24 ساعه</small></td><td>${(s.e[1]||s.e[2])?t:tb}<br><small>طريق (سفاجا-الأقصر ومرسى علم - إدفو) مفتوح من الساعه 6 حتى 18 يوميا</small></td></tr>
+ <tr><td colspan="4" class="b c">مع ملاحظة ضرورة الإلتزام بمرور السياره فى الذهاب والعوده من منفذ الخروج فى الميعاد المحدد مسبقا من قبل الشركه والمدون بإخطارها والمثبت بتصريح المرور</td></tr></table>
+ <div class="sg">
+  <div class="sr"><div>توقيع مدير الشركه : ..................</div><div class="stamp">ختم الشركه</div><div class="dt">تحريرا فى : <b>${today()}</b></div></div>
+  <div class="sb"><div class="bl c"><u>مقدم الإخطار</u></div><div class="bl" style="font-size:15px">الإســم : ${esc(s.subName)}<br>التوقيع :<br>رقم البطاقه :<br>${esc(s.subId)}</div></div>
+ </div>
+ <div class="ap">${aps}</div>
+ </section>`}
+function render(){const s=state();$("pv").innerHTML=sheetN(s,1)+sheetN(s,2)+sheetN(s,3);lsSet("fts_state",s);showMiss(false)}
+function setState(s){TEXT.forEach(k=>{if(s[k]!=null)$(k).value=s[k]});
+ [["d","d"],["e","e"]].forEach(([a,g])=>document.querySelectorAll(`[data-g=${g}]`).forEach((x,i)=>x.checked=!!(s[a]&&s[a][i])))}
+function cars(){return lsGet("fts_cars",[])}
+function refreshCars(){$("carlist").innerHTML=cars().map(c=>`<option value="${esc(c.cnum)} - ${esc(c.driver)}">`).join("")}
+$("q").addEventListener("input",()=>{const v=$("q").value.trim();if(!v)return;
+ const c=cars().find(c=>v===c.cnum+" - "+c.driver||c.cnum===v||c.driver===v);
+ if(c){["tco","ctype","cnum","cbelong","driver","chassis","plate","dphone","bdriver","bphone"].forEach(k=>$(k).value=(k==="ctype"?normType(c[k]):c[k])||"");render()}});
+$("savecar").onclick=()=>{const n=$("cnum").value.trim();if(!n){alert("اكتب رقم السيارة أولا");return}
+ const c={};["tco","ctype","cnum","cbelong","driver","chassis","plate","dphone","bdriver","bphone"].forEach(k=>c[k]=$(k).value);
+ const l=cars().filter(x=>x.cnum!==n);l.push(c);lsSet("fts_cars",l);refreshCars();alert("تم حفظ السيارة")};
+$("delcar").onclick=()=>{const n=$("cnum").value.trim();lsSet("fts_cars",cars().filter(x=>x.cnum!==n));refreshCars()};
+$("print").onclick=()=>{render();if(blocked())return;const w=window.open("","_blank");
+ if(!w){try{window.print()}catch(e){}return}
+ w.document.write('<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>إخطار</title><style>'+[...document.querySelectorAll("style")].map(x=>x.textContent).join("")+'</style></head><body>'+$("pv").innerHTML+'</body></html>');
+ w.document.close();setTimeout(()=>{w.focus();w.print()},500)};
+$("reset").onclick=()=>{["date","tcity","pax","nat","guide","gphone","prog","tgo","tret","tco","ctype","cnum","cbelong","driver","chassis","plate","dphone","progExtra","bdriver","bphone","q"].forEach(k=>$(k).value="");
+ document.querySelectorAll("[data-g]").forEach(x=>x.checked=false);render()};
+document.querySelector(".app").addEventListener("input",render);
+document.querySelector(".app").addEventListener("change",render);
+const saved=lsGet("fts_state",null);if(saved)setState(saved);
+refreshCars();render();
+
+/* ===== استيراد AI ===== */
+const PROMPT=`حوّل بيانات الرحلة التالية إلى JSON فقط بدون أي شرح أو علامات ماركداون، بهذه المفاتيح بالضبط (اترك القيمة "" لو غير موجودة):
+{"date":"YYYY-MM-DD","trip_type":"اوفر داي أو اوفر نايت أو توصيلة","city":"","pax":"","nationality":"","guide_name":"","guide_phone":"","program":"","directions":["من: القاهره، الإسكندريه، شرم الشيخ، الأقصر، أسوان"],"exits":["من: كمين الجونه، كمين سفاجا - قنا، كمين مرسى علم - إدفو"],"time_go":"","time_return":"","transport_company":"","car_type":"ليموزين أو ميكروباص أو كوستر أو اتوبيس","car_number":"","car_belongs_to":"","chassis_number":"","driver":"","driver_phone":"","backup_driver":"","backup_driver_phone":""}
+
+البيانات:
+`;
+$("cpPrompt").onclick=async()=>{try{await navigator.clipboard.writeText(PROMPT);$("jmsg").textContent="تم نسخ البرومبت"}catch(e){$("jsonIn").value=PROMPT;$("jmsg").textContent="انسخ النص من الخانة"}};
+const MAP={date:"date",trip_type:"ttype",city:"tcity",pax:"pax",nationality:"nat",guide_name:"guide",guide_phone:"gphone",program:"prog",time_go:"tgo",time_return:"tret",transport_company:"tco",car_type:"ctype",car_number:"cnum",car_belongs_to:"cbelong",chassis_number:"chassis",driver:"driver",driver_phone:"dphone",backup_driver:"bdriver",backup_driver_phone:"bphone"};
+$("applyJson").onclick=()=>{
+ let t=$("jsonIn").value.replace(/```json|```/g,"").trim(),o;
+ try{o=JSON.parse(t)}catch(e){$("jmsg").textContent="الـ JSON غير صحيح، تأكد إنك نسخته كامل";return}
+ Object.keys(MAP).forEach(k=>{if(o[k]!=null&&o[k]!=="")$(MAP[k]).value=MAP[k]==="ctype"?normType(String(o[k])):String(o[k])});
+ const hit=(arr,list,g)=>{if(!Array.isArray(arr))return;const x=document.querySelectorAll(`[data-g=${g}]`);x.forEach(e=>e.checked=false);arr.forEach(a=>{const i=list.findIndex(v=>v.replace(/\s/g,"")===String(a).replace(/\s/g,""));if(i>=0)x[i].checked=true})};
+ hit(o.directions,DIRS,"d");hit(o.exits,EXITS,"e");
+ if(o.car_number){const c=cars().find(c=>c.cnum===String(o.car_number).trim());if(c)Object.keys(c).forEach(k=>{if(!$(k).value)$(k).value=c[k]})}
+ $("jmsg").textContent="تم تطبيق البيانات";render();check();
+};
+
+/* ===== سجل 72 ساعة وحساب العربيات ===== */
+const H72=72*3600*1000;let curId=null;
+function hist(){const n=Date.now();const l=lsGet("fts_hist",[]).filter(h=>n-h.ts<H72);return l}
+function saveTrip(){const s=state();if(blocked())return false;if(!s.cnum.trim()){alert("اكتب رقم السيارة الأول");return false}
+ let l=hist();if(curId&&l.some(h=>h.id===curId)){l=l.map(h=>h.id===curId?{id:h.id,ts:Date.now(),s}:h)}else{curId=Date.now();l.push({id:curId,ts:curId,s})}
+ lsSet("fts_hist",l);drawHist();return true}
+function drawHist(){const fd=$("hfDate").value;const l=hist().filter(h=>!fd||h.s.date===fd).sort((a,b)=>b.ts-a.ts);costDraw(l);
+ const cs=new Set(l.map(h=>h.s.cnum.trim()));
+ const pax=l.reduce((t,h)=>t+(parseInt(h.s.pax)||0),0);
+ $("stats").innerHTML=`<span>عدد الرحلات: <b>${l.length}</b></span><span>عدد العربيات: <b>${cs.size}</b></span><span>إجمالي السائحين: <b>${pax}</b></span>`;
+ $("hist").innerHTML=l.length?l.map(h=>`<div class="hi"><span>${esc(fmt(h.s.date))} | ${esc(h.s.ttype)} ${esc(h.s.tcity)} | عربية ${esc(h.s.cnum)} | ${esc(h.s.driver)} | ${esc(h.s.pax)} سائح</span><span><button data-o="${h.id}">فتح</button> <button data-x="${h.id}">حذف</button></span></div>`).join(""):'<div class="note">مفيش رحلات محفوظة في آخر 72 ساعة.</div>';
+ lsSet("fts_hist",hist());check()}
+$("hist").addEventListener("click",e=>{const o=e.target.dataset.o,x=e.target.dataset.x;
+ if(o){const h=hist().find(h=>String(h.id)===o);if(h){setState(h.s);curId=h.id;render();window.scrollTo(0,0)}}
+ if(x){lsSet("fts_hist",hist().filter(h=>String(h.id)!==x));if(String(curId)===x)curId=null;drawHist()}});
+function check(){const s=state();const w=$("warn");w.textContent="";if(!s.cnum.trim()||!s.date)return;
+ const c=hist().filter(h=>h.id!==curId&&h.s.cnum.trim()===s.cnum.trim()&&h.s.date===s.date);
+ if(c.length)w.textContent=`تنبيه: العربية ${s.cnum} مسجلة قبل كده في نفس اليوم (${c.length} رحلة).`}
+$("save").onclick=()=>{if(saveTrip())alert("تم الحفظ في سجل 72 ساعة")};
+$("print").addEventListener("click",saveTrip);
+$("reset").addEventListener("click",()=>{curId=null;check()});
+document.querySelector(".app").addEventListener("input",check);
+/* ===== تسجيل فورم GPS ===== */
+const GF_ID="1FAIpQLScSHU-SGwRzD06BtRkS-WxwS-G6JWrm37CrU2WYC__sAncfKA";
+const GF_FROM=["الغردقة","شرم الشيخ","أسوان","الأقصر","مرسى علم","القاهرة"];
+const GF_TO=["القاهرة","الأسكندرية","الأقصر","أسوان","أبو سمبل","الغردقة","العين السخنة","دير الأنبا بولا / الأنبا أنطونيوس","الجونة","سفاجا","مرسى علم","شرم الشيخ","دهب","رأس محمد","طابا","نويبع","جبل موسى","سانت كاترين","سوهاج","المنيا","دندرة / أبيدوس","اسنا","إدفو","كوم امبو","دندرة"];
+$("gfFrom").innerHTML=GF_FROM.map(v=>`<option>${v}</option>`).join("");
+$("gfTo").innerHTML=GF_TO.map(v=>`<option>${v}</option>`).join("");
+if(saved){if(saved.gfFrom)$("gfFrom").value=saved.gfFrom;if(saved.gfTo)$("gfTo").value=saved.gfTo}
+const DIR2GF=["القاهرة","الأسكندرية","شرم الشيخ","الأقصر","أسوان"];
+$("dirs").addEventListener("change",()=>{const i=[...document.querySelectorAll("[data-g=d]")].findIndex(x=>x.checked);if(i>=0){$("gfTo").value=DIR2GF[i];render()}});
+const GF_PAGES={"اوتوبيس":"0,1,6","كوستر":"0,2,6","ميني باص":"0,3,6","ميكروباص":"0,4,6","هاي اس":"0,4,6","ليموزين":"0,5,6","دفع رباعي":"0,5,6"};
+const GF_PAX={"اوتوبيس":"entry.1177081991","كوستر":"entry.1113687347","ميني باص":"entry.1881561870","ميكروباص":"entry.431788748","هاي اس":"entry.431788748","ليموزين":"entry.1439378422","دفع رباعي":"entry.1439378422"};
+const en=v=>String(v||"").replace(/[٠-٩]/g,c=>c.charCodeAt(0)-0x0660).replace(/[۰-۹]/g,c=>c.charCodeAt(0)-0x06F0);
+function gfPairs(s){
+ const lic=en(s.lic).replace(/\D/g,""),ct=s.ctype,p=[];
+ const add=(k,v)=>{if(k&&v!==""&&v!=null)p.push([k,v])};
+ add("entry.1748033039",s.gfFrom);add("entry.1485870053",s.gfTo);
+ add("entry.1757055921",s.coName);add("entry.1599411303",lic);
+ add("entry.1484896930",(s.tco||"").trim());add("entry.1829075331",lic);
+ add("entry.458600585",ct==="اوتوبيس"?"اتوبيس سياحي":ct);
+ add(GF_PAX[ct],en(s.pax||"1"));
+ add("entry.100837855",(s.plate||"").replace(/[\d\s\-\/\.]+/g,"").split("").join(" "));
+ add("entry.1699758489",en(s.cnum).replace(/\D/g,""));
+ add("entry.342115608",en(s.chassis).replace(/\s+/g,""));
+ add("entry.1971436968",s.gfNat);
+ add("entry.1253472782",en(s.dphone).replace(/\D/g,""));
+ add("entry.2118850643","مندوب سياحة خارجية");
+ return p}
+function gfCheck(s){
+ if(!s.ctype)return"اختار نوع العربية";
+ if(!s.cnum.trim())return"اكتب رقم العربية";
+ if(!s.chassis.trim())return"اكتب رقم الشاسيه";
+ if(en(s.dphone).replace(/\D/g,"").length<10)return"رقم السائق ناقص أو غير مكتوب";
+ return""}
+$("gfSend").onclick=()=>{
+ const s=state(),m=$("gfmsg"),e=gfCheck(s);if(e){m.textContent=e;return}
+ const key=s.cnum.trim()+"|"+s.date,sent=lsGet("fts_gfsent",{});
+ if(sent[key]&&!confirm("العربية دي اتسجلت قبل كده في نفس اليوم. تسجلها تاني؟"))return;
+ let fr=document.getElementById("gfFrame");
+ if(!fr){fr=document.createElement("iframe");fr.name="gfFrame";fr.id="gfFrame";fr.style.display="none";document.body.appendChild(fr)}
+ const f=document.createElement("form");f.method="POST";f.target="gfFrame";
+ f.action=`https://docs.google.com/forms/d/e/${GF_ID}/formResponse`;
+ gfPairs(s).concat([["pageHistory",GF_PAGES[s.ctype]||"0,4,6"]]).forEach(([k,v])=>{const i=document.createElement("input");i.type="hidden";i.name=k;i.value=v;f.appendChild(i)});
+ const sendForm=()=>{document.body.appendChild(f);f.submit();f.remove()};
+ try{const body=new URLSearchParams();gfPairs(s).concat([["pageHistory",GF_PAGES[s.ctype]||"0,4,6"]]).forEach(([k,v])=>body.append(k,v));
+  fetch(f.action,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/x-www-form-urlencoded"},body}).catch(sendForm)}catch(e){sendForm()}
+ sent[key]=Date.now();lsSet("fts_gfsent",sent);
+ m.textContent="تم إرسال الطلب لفورم GPS. لو مش متأكد، جرّب مرة بعربية تجريبية وتأكد من وصولها، أو استخدم زر فتح الفورم متملّي."};
+$("gfOpen").onclick=()=>{
+ const s=state(),m=$("gfmsg"),q=new URLSearchParams();q.append("usp","pp_url");
+ gfPairs(s).forEach(([k,v])=>q.append(k,v));
+ const w=window.open(`https://docs.google.com/forms/d/e/${GF_ID}/viewform?${q}`,"_blank");
+ m.textContent=w?"اتفتح الفورم متملّي، كمّل بـ التالي ثم إرسال.":"المتصفح منع فتح التبويب، اسمح بالنوافذ المنبثقة."};
+/* ===== البرامج الافتراضية حسب الوجهة ===== */
+const PROG0={
+"الأقصر":"رست 85 + كرنك+حتشبسوت+ملوك+ملكات+محلات+\nجزيره+جولة نيل+مرسي اهالي+ممنون +",
+"القاهرة":"رست الزعفرانة + هرم + متحف + قلعه+ جوله نيل+ مرسي الحجه+ محلات+ غداء+ مصر القديمه +خان خليلي +",
+"أسوان":"السد العالي + معبد فيلة + المسلة الناقصة + جولة فلوكة + محل عطور",
+"الأسكندرية":"قلعة قايتباي + مكتبة الإسكندرية + عمود السواري + المسرح الروماني",
+"شرم الشيخ":""};
+let lastDef="";
+const isDef=c=>Object.values(PROG0).concat(Object.values(lsGet("fts_progs",{}))).some(v=>v.trim()===c);
+function progFor(d){const o=lsGet("fts_progs",{});return d in o?o[d]:(PROG0[d]||"")}
+function applyProg(force){const d=$("gfTo").value,cur=$("prog").value.trim();
+ if(force||cur===""||cur===lastDef.trim()||isDef(cur)){const n=progFor(d);$("prog").value=n;lastDef=n;render()}}
+lastDef=progFor($("gfTo").value);
+if($("prog").value.trim()==="")applyProg();
+$("gfTo").addEventListener("change",()=>applyProg());
+$("dirs").addEventListener("change",()=>applyProg());
+$("progReset").onclick=()=>{applyProg(true);$("progmsg").textContent="رجع البرنامج الافتراضي لـ "+$("gfTo").value};
+$("progSave").onclick=()=>{const o=lsGet("fts_progs",{}),d=$("gfTo").value;o[d]=$("prog").value.trim();lsSet("fts_progs",o);lastDef=o[d];$("progmsg").textContent="تم حفظ البرنامج كافتراضي لـ "+d};
+/* ===== منفذ الخروج تلقائي حسب الاتجاه ===== */
+const EX_BY_DIR={0:0,3:1};
+$("dirs").addEventListener("change",()=>{const i=[...document.querySelectorAll("[data-g=d]")].findIndex(x=>x.checked);
+ if(i in EX_BY_DIR){document.querySelectorAll("[data-g=e]").forEach((x,k)=>x.checked=(k===EX_BY_DIR[i]));render()}});
+/* مزامنة الاتجاه ومنفذ الخروج من الوجهة */
+const EX2={"القاهرة":0,"الأقصر":1};
+function syncDirs(){const to=$("gfTo").value;document.querySelectorAll("[data-g=d]").forEach((x,i)=>x.checked=(DIR2GF[i]===to))}
+$("gfTo").addEventListener("change",()=>{const to=$("gfTo").value;syncDirs();
+ if(to in EX2)document.querySelectorAll("[data-g=e]").forEach((x,k)=>x.checked=(k===EX2[to]));render()});
+syncDirs();render();
+/* ===== الوجهة (3 + أخرى) ومواعيد افتراضية والتوصيلة ===== */
+const GF_OPTS=["القاهرة","الأقصر","أسوان"];
+function fixTo(v){if(!v||GF_OPTS.includes(v)){$("gfSel").value=v||"القاهرة";$("gfOther").style.display="none";if(!v)$("gfTo").value="القاهرة"}else{$("gfSel").value="__o";$("gfOther").value=v;$("gfOther").style.display=""}}
+const fireTo=()=>$("gfTo").dispatchEvent(new Event("change",{bubbles:true}));
+$("gfSel").addEventListener("change",()=>{const v=$("gfSel").value;if(v==="__o"){$("gfOther").style.display="";$("gfTo").value=$("gfOther").value.trim()}else{$("gfOther").style.display="none";$("gfTo").value=v}fireTo()});
+$("gfOther").addEventListener("input",()=>{$("gfTo").value=$("gfOther").value.trim();fireTo()});
+const TM0={"الأقصر":["6:00","17:00"],"القاهرة":["3:00","18:00"]};
+function applyTimes(){const t=TM0[$("gfTo").value];if(!t)return;const g=$("tgo").value.trim(),r=$("tret").value.trim();
+ if(g===""||Object.values(TM0).some(x=>x[0]===g))$("tgo").value=t[0];
+ if($("ttype").value!=="توصيلة"&&(r===""||Object.values(TM0).some(x=>x[1]===r)))$("tret").value=t[1];render()}
+$("gfTo").addEventListener("change",applyTimes);
+function updTrip(){const t=$("ttype").value==="توصيلة";
+ $("prog").parentElement.style.display=t?"none":"";$("progReset").parentElement.style.display=t?"none":"";$("progmsg").style.display=t?"none":"";
+ $("progExtraL").style.display=t?"":"none";
+ $("tret").parentElement.style.display=t?"none":"";if(t)$("tret").value="";else applyTimes();render()}
+$("ttype").addEventListener("change",updTrip);
+const _ss=setState;setState=function(s){s=Object.assign({},s,{ctype:normType(s.ctype)});_ss(s);fixTo($("gfTo").value);updTrip()};
+fixTo($("gfTo").value);applyTimes();updTrip();
+/* فلتر التقويم في سجل 72 ساعة */
+const dstr=o=>{const d=new Date();d.setDate(d.getDate()+o);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+$("hfDate").addEventListener("change",drawHist);
+$("hfToday").onclick=()=>{$("hfDate").value=dstr(0);drawHist()};
+$("hfYest").onclick=()=>{$("hfDate").value=dstr(-1);drawHist()};
+$("hfAll").onclick=()=>{$("hfDate").value="";drawHist()};
+/* حساب العربيات والكوست */
+function getPrices(){return Object.assign({"ليموزين":250,"ميكروباص":450,"كوستر":450,"اتوبيس":600},lsGet("fts_prices",{}))}
+function costDraw(l){
+ const P=getPrices(),cnt={};
+ l.forEach(h=>{const t=normType(h.s.ctype)||"غير محدد";cnt[t]=(cnt[t]||0)+1});
+ document.querySelectorAll(".prc").forEach(i=>{if(document.activeElement!==i)i.value=P[i.dataset.t]});
+ const names=Object.keys(cnt);let tc=0,tt=0;
+ const td='style="border:1px solid var(--line);padding:5px 8px;text-align:center"';
+ const rows=names.map(n=>{const p=P[n]||0,sub=p*cnt[n];tc+=cnt[n];tt+=sub;return `<tr><td ${td}>${esc(n)}</td><td ${td}>${cnt[n]}</td><td ${td}>${p}</td><td ${td}>${sub}</td></tr>`}).join("");
+ const fd=$("hfDate").value;
+ $("costBox").innerHTML=names.length?`<h2 style="margin-top:10px">عربيات وكوست ${fd?esc(fmt(fd)):"كل السجل"}</h2><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:14px"><tr><td ${td}><b>النوع</b></td><td ${td}><b>العدد</b></td><td ${td}><b>السعر</b></td><td ${td}><b>الإجمالي</b></td></tr>${rows}<tr><td ${td}><b>المجموع</b></td><td ${td}><b>${tc}</b></td><td ${td}></td><td ${td}><b>${tt}</b></td></tr></table></div>`:"";
+}
+document.querySelectorAll(".prc").forEach(i=>i.addEventListener("input",()=>{const p=lsGet("fts_prices",{});p[i.dataset.t]=Number(i.value)||0;lsSet("fts_prices",p);drawHist()}));
+/* توحيد أنواع العربيات */
+function normType(t){return ({"ميني باص":"كوستر","هاي اس":"ميكروباص","دفع رباعي":"ليموزين"})[t]||t}
+/* تنبيهات النواقص */
+function missing(s){const m=[];
+ const add=(id,l,b)=>m.push([id,l,b]);
+ const ct=normType(s.ctype),bus=["ميكروباص","كوستر","اتوبيس"].includes(ct);
+ if(!s.ctype)add("ctype","نوع العربية",true);
+ if(!s.cnum.trim())add("cnum","رقم العربية",true);
+ if(!s.driver.trim())add("driver","اسم السائق",true);
+ if(!dg(s.dphone))add("dphone","رقم السائق",true);else if(dg(s.dphone).length<11)add("dphone","رقم السائق أقل من 11 رقم",true);
+ if(dg(s.bphone)&&dg(s.bphone).length<11)add("bphone","رقم السائق الاحتياطي أقل من 11 رقم",true);
+ if(dg(s.gphone)&&dg(s.gphone).length<11)add("gphone","رقم المندوب أقل من 11 رقم",true);
+ const dn=(s.ttype==="اوفر داي"||s.ttype==="اوفر نايت");
+ if(bus&&dn&&!s.guide.trim())add("guide","اسم المندوب / المرشد",true);
+ if(bus&&dn&&!dg(s.gphone))add("gphone","رقم تليفون المندوب / المرشد",true);
+ if(bus&&s.ttype==="اوفر داي"){if(!s.bdriver.trim())add("bdriver","اسم السائق الاحتياطي",true);if(!dg(s.bphone))add("bphone","رقم السائق الاحتياطي",true)}
+ if(!s.date)add("date","تاريخ الرحلة",false);
+ if(!String(s.pax).trim())add("pax","عدد السائحين",false);
+ if(!s.gfTo.trim())add("gfSel","الوجهة",false);
+ if(!s.e.some(Boolean))add("exits","منفذ الخروج",false);
+ if(!s.tgo.trim())add("tgo","موعد الذهاب",false);
+ if(s.ttype!=="توصيلة"&&!s.tret.trim())add("tret","موعد العودة",false);
+ if(!s.chassis.trim())add("chassis","رقم الشاسيه (للـ GPS)",false);
+ return m}
+function showMiss(focus){
+ document.querySelectorAll(".bad").forEach(x=>x.classList.remove("bad"));
+ const m=missing(state()),b=m.filter(x=>x[2]),w=m.filter(x=>!x[2]),box=$("miss");
+ if(!m.length){box.style.display="none";return false}
+ box.className="miss "+(b.length?"blk":"wrn");box.style.display="";
+ box.innerHTML=(b.length?"<b>⚠ ناقص ولازم تكتبه قبل الحفظ والطباعة:</b> "+b.map(x=>x[1]).join("، "):"")+(b.length&&w.length?"<br>":"")+(w.length?"<b>تنبيه (مش مكتوب):</b> "+w.map(x=>x[1]).join("، "):"");
+ if(focus){m.forEach(x=>{const e=$(x[0]);if(e)e.classList.add("bad")});
+  if(b.length){const f=$(b[0][0]);if(f){f.scrollIntoView({block:"center"});f.focus()}}}
+ return b.length>0}
+function blocked(){return showMiss(true)}
+function dg(v){return String(v||"").replace(/[٠-٩]/g,c=>c.charCodeAt(0)-1632).replace(/[۰-۹]/g,c=>c.charCodeAt(0)-1776).replace(/\D/g,"")}
+showMiss(false);
+drawHist();
+</script>
+</body>
+</html>

@@ -328,8 +328,8 @@ $("gfTo").innerHTML=GF_TO.map(v=>`<option>${v}</option>`).join("");
 if(saved){if(saved.gfFrom)$("gfFrom").value=saved.gfFrom;if(saved.gfTo)$("gfTo").value=saved.gfTo}
 const DIR2GF=["القاهرة","الأسكندرية","شرم الشيخ","الأقصر","أسوان"];
 $("dirs").addEventListener("change",()=>{const i=[...document.querySelectorAll("[data-g=d]")].findIndex(x=>x.checked);if(i>=0){$("gfTo").value=DIR2GF[i];render()}});
-const GF_PAGES={"اوتوبيس":"0,1,6","كوستر":"0,2,6","ميني باص":"0,3,6","ميكروباص":"0,4,6","هاي اس":"0,4,6","ليموزين":"0,5,6","دفع رباعي":"0,5,6"};
-const GF_PAX={"اوتوبيس":"entry.1177081991","كوستر":"entry.1113687347","ميني باص":"entry.1881561870","ميكروباص":"entry.431788748","هاي اس":"entry.431788748","ليموزين":"entry.1439378422","دفع رباعي":"entry.1439378422"};
+const GF_PAGES={"اوتوبيس":"0,1,6","اتوبيس":"0,1,6","كوستر":"0,2,6","ميني باص":"0,3,6","ميكروباص":"0,4,6","هاي اس":"0,4,6","ليموزين":"0,5,6","دفع رباعي":"0,5,6"};
+const GF_PAX={"اوتوبيس":"entry.1177081991","اتوبيس":"entry.1177081991","كوستر":"entry.1113687347","ميني باص":"entry.1881561870","ميكروباص":"entry.431788748","هاي اس":"entry.431788748","ليموزين":"entry.1439378422","دفع رباعي":"entry.1439378422"};
 const en=v=>String(v||"").replace(/[٠-٩]/g,c=>c.charCodeAt(0)-0x0660).replace(/[۰-۹]/g,c=>c.charCodeAt(0)-0x06F0);
 function gfPairs(s){
  const lic=en(s.lic).replace(/\D/g,""),ct=s.ctype,p=[];
@@ -337,7 +337,7 @@ function gfPairs(s){
  add("entry.1748033039",s.gfFrom);add("entry.1485870053",s.gfTo);
  add("entry.1757055921",s.coName);add("entry.1599411303",lic);
  add("entry.1484896930",(s.tco||"").trim());add("entry.1829075331",lic);
- add("entry.458600585",ct==="اوتوبيس"?"اتوبيس سياحي":ct);
+ add("entry.458600585",ct==="اوتوبيس"||ct==="اتوبيس"?"اتوبيس سياحي":ct);
  add(GF_PAX[ct],en(s.pax||"1"));
  add("entry.100837855",(s.plate||"").replace(/[\d\s\-\/\.]+/g,"").split("").join(" "));
  add("entry.1699758489",en(s.cnum).replace(/\D/g,""));
@@ -351,6 +351,13 @@ function gfCheck(s){
  if(!s.cnum.trim())return"اكتب رقم العربية";
  if(!s.chassis.trim())return"اكتب رقم الشاسيه";
  if(en(s.dphone).replace(/\D/g,"").length<10)return"رقم السائق ناقص أو غير مكتوب";
+ if(!(s.tco||"").trim())return"اكتب اسم شركة النقل (لازم للفورم)";
+ if(!(s.plate||"").trim())return"اكتب لوحة العربية (الحروف والأرقام) (لازم للفورم)";
+ if(!en(s.lic).replace(/\D/g,""))return"رقم ترخيص الشركة ناقص";
+ if(!s.coName.trim())return"اسم شركة السياحة ناقص";
+ if(!String(s.pax).trim())return"عدد السائحين ناقص";
+ if(!(s.gfTo||"").trim())return"الوجهة ناقصة";
+ if(!(s.gfNat||"").trim())return"الجنسية ناقصة";
  return""}
 $("gfSend").onclick=()=>{
  const s=state(),m=$("gfmsg"),e=gfCheck(s);if(e){m.textContent=e;return}

@@ -97,7 +97,7 @@ details summary{cursor:pointer;color:var(--acc);font-size:14px}
 <label>رقم الترخيص<input id="lic" value="2428"></label>
 <label>مقدم الإخطار<input id="subName" value="محمد صالح"></label>
 <label>رقم البطاقة<input id="subId" value="1502435"></label>
-<label>الجنسية في فورم GPS<input id="gfNat" value="ألمانيا"></label>
+<input id="gfNat" type="hidden">
 </div></div>
 
 <div class="card"><h2>الرحلة</h2>
@@ -130,14 +130,13 @@ details summary{cursor:pointer;color:var(--acc);font-size:14px}
 <div class="g" style="margin-top:10px">
 <label>شركة النقل<input id="tco"></label>
 <label>نوع السيارة<select id="ctype"><option value="">اختر</option><option>ليموزين</option><option>ميكروباص</option><option>كوستر</option><option>اتوبيس</option></select></label>
+<label>حروف العربية<input id="cbelong"></label>
 <label>رقم السيارة<input id="cnum"></label>
 <label>رقم الشاسيه<input id="chassis" dir="ltr"></label>
-<label>لوحة العربية (حروف وأرقام)<input id="plate"></label>
-<label>رقم السائق (واتساب)<input id="dphone" inputmode="tel" dir="ltr"></label>
+<label>السائق الأساسي<input id="driver"></label>
+<label>رقم السائق الأساسي (واتساب)<input id="dphone" inputmode="tel" dir="ltr"></label>
 <label>السائق الاحتياطي<input id="bdriver"></label>
 <label>رقم السائق الاحتياطي<input id="bphone" inputmode="tel" dir="ltr"></label>
-<label>الجهة التابعة لها<input id="cbelong"></label>
-<label>السائق الأساسي<input id="driver"></label>
 </div>
 <div class="row"><button id="savecar">حفظ السيارة</button><button id="delcar">حذف السيارة المحفوظة</button></div>
 <div class="note">السيارات المحفوظة تتخزن في هذا المتصفح فقط.</div>
@@ -168,7 +167,7 @@ details summary{cursor:pointer;color:var(--acc);font-size:14px}
 const $=id=>document.getElementById(id);
 const DIRS=["القاهره","الإسكندريه","شرم الشيخ","الأقصر","أسوان"];
 const EXITS=["كمين الجونه","كمين سفاجا - قنا","كمين مرسى علم - إدفو"];
-const TEXT=["coName","lic","subName","subId","date","ttype","tcity","pax","nat","guide","gphone","prog","tgo","tret","tco","ctype","cnum","cbelong","driver","chassis","plate","dphone","gfFrom","gfTo","gfNat","progExtra","bdriver","bphone"];
+const TEXT=["coName","lic","subName","subId","date","ttype","tcity","pax","nat","guide","gphone","prog","tgo","tret","tco","ctype","cnum","cbelong","driver","chassis","dphone","gfFrom","gfTo","gfNat","progExtra","bdriver","bphone"];
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 function mk(box,arr,name){$(box).innerHTML=arr.map((v,i)=>`<label><input type="checkbox" data-g="${name}" value="${i}"> ${v}</label>`).join("")}
 mk("dirs",DIRS,"d");mk("exits",EXITS,"e");
@@ -263,16 +262,16 @@ function cars(){return lsGet("fts_cars",[])}
 function refreshCars(){$("carlist").innerHTML=cars().map(c=>`<option value="${esc(c.cnum)} - ${esc(c.driver)}">`).join("")}
 $("q").addEventListener("input",()=>{const v=$("q").value.trim();if(!v)return;
  const c=cars().find(c=>v===c.cnum+" - "+c.driver||c.cnum===v||c.driver===v);
- if(c){["tco","ctype","cnum","cbelong","driver","chassis","plate","dphone","bdriver","bphone"].forEach(k=>$(k).value=(k==="ctype"?normType(c[k]):c[k])||"");render()}});
+ if(c){["tco","ctype","cnum","cbelong","driver","chassis","dphone","bdriver","bphone"].forEach(k=>$(k).value=(k==="ctype"?normType(c[k]):c[k])||"");render()}});
 $("savecar").onclick=()=>{const n=$("cnum").value.trim();if(!n){alert("اكتب رقم السيارة أولا");return}
- const c={};["tco","ctype","cnum","cbelong","driver","chassis","plate","dphone","bdriver","bphone"].forEach(k=>c[k]=$(k).value);
+ const c={};["tco","ctype","cnum","cbelong","driver","chassis","dphone","bdriver","bphone"].forEach(k=>c[k]=$(k).value);
  const l=cars().filter(x=>x.cnum!==n);l.push(c);lsSet("fts_cars",l);refreshCars();alert("تم حفظ السيارة")};
 $("delcar").onclick=()=>{const n=$("cnum").value.trim();lsSet("fts_cars",cars().filter(x=>x.cnum!==n));refreshCars()};
 $("print").onclick=()=>{render();if(blocked())return;const w=window.open("","_blank");
  if(!w){try{window.print()}catch(e){}return}
  w.document.write('<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>إخطار</title><style>'+[...document.querySelectorAll("style")].map(x=>x.textContent).join("")+'</style></head><body>'+$("pv").innerHTML+'</body></html>');
  w.document.close();setTimeout(()=>{w.focus();w.print()},500)};
-$("reset").onclick=()=>{["date","tcity","pax","nat","guide","gphone","prog","tgo","tret","tco","ctype","cnum","cbelong","driver","chassis","plate","dphone","progExtra","bdriver","bphone","q"].forEach(k=>$(k).value="");
+$("reset").onclick=()=>{["date","tcity","pax","nat","guide","gphone","prog","tgo","tret","tco","ctype","cnum","cbelong","driver","chassis","dphone","progExtra","bdriver","bphone","q"].forEach(k=>$(k).value="");
  document.querySelectorAll("[data-g]").forEach(x=>x.checked=false);render()};
 document.querySelector(".app").addEventListener("input",render);
 document.querySelector(".app").addEventListener("change",render);
@@ -339,10 +338,10 @@ function gfPairs(s){
  add("entry.1484896930",(s.tco||"").trim());add("entry.1829075331",lic);
  add("entry.458600585",ct==="اوتوبيس"||ct==="اتوبيس"?"اتوبيس سياحي":ct);
  add(GF_PAX[ct],en(s.pax||"1"));
- add("entry.100837855",(s.plate||"").replace(/[\d\s\-\/\.]+/g,"").split("").join(" "));
+ add("entry.100837855",(s.cbelong||"").replace(/[\d\s\-\/\.]+/g,"").split("").join(" "));
  add("entry.1699758489",en(s.cnum).replace(/\D/g,""));
  add("entry.342115608",en(s.chassis).replace(/\s+/g,""));
- add("entry.1971436968",s.gfNat);
+ add("entry.1971436968",gfCountry(s.nat));
  add("entry.1253472782",en(s.dphone).replace(/\D/g,""));
  add("entry.2118850643","مندوب سياحة خارجية");
  return p}
@@ -352,12 +351,12 @@ function gfCheck(s){
  if(!s.chassis.trim())return"اكتب رقم الشاسيه";
  if(en(s.dphone).replace(/\D/g,"").length<10)return"رقم السائق ناقص أو غير مكتوب";
  if(!(s.tco||"").trim())return"اكتب اسم شركة النقل (لازم للفورم)";
- if(!(s.plate||"").trim())return"اكتب لوحة العربية (الحروف والأرقام) (لازم للفورم)";
+ if(!(s.cbelong||"").replace(/[\d\s\-\/\.]+/g,"").length)return"اكتب حروف العربية (لازم للفورم)";
  if(!en(s.lic).replace(/\D/g,""))return"رقم ترخيص الشركة ناقص";
  if(!s.coName.trim())return"اسم شركة السياحة ناقص";
  if(!String(s.pax).trim())return"عدد السائحين ناقص";
  if(!(s.gfTo||"").trim())return"الوجهة ناقصة";
- if(!(s.gfNat||"").trim())return"الجنسية ناقصة";
+ if(!(s.nat||"").trim())return"اكتب الجنسية في خانة الجنسية بتاعة الرحلة (لازمة للفورم)";
  return""}
 $("gfSend").onclick=()=>{
  const s=state(),m=$("gfmsg"),e=gfCheck(s);if(e){m.textContent=e;return}
@@ -461,6 +460,7 @@ function missing(s){const m=[];
  if(bus&&s.ttype==="اوفر داي"){if(!s.bdriver.trim())add("bdriver","اسم السائق الاحتياطي",true);if(!dg(s.bphone))add("bphone","رقم السائق الاحتياطي",true)}
  if(!s.date)add("date","تاريخ الرحلة",false);
  if(!String(s.pax).trim())add("pax","عدد السائحين",false);
+ if(!s.nat.trim())add("nat","الجنسية",false);
  if(!s.gfTo.trim())add("gfSel","الوجهة",false);
  if(!s.e.some(Boolean))add("exits","منفذ الخروج",false);
  if(!s.tgo.trim())add("tgo","موعد الذهاب",false);
@@ -479,6 +479,12 @@ function showMiss(focus){
 function blocked(){return showMiss(true)}
 function dg(v){return String(v||"").replace(/[٠-٩]/g,c=>c.charCodeAt(0)-1632).replace(/[۰-۹]/g,c=>c.charCodeAt(0)-1776).replace(/\D/g,"")}
 showMiss(false);
+/* تحويل الجنسية لاسم الدولة لفورم GPS */
+function gfCountry(t){
+ const nk=x=>String(x).trim().replace(/[أإآ]/g,"ا").replace(/ة/g,"ه").replace(/ى/g,"ي").replace(/^ال/,"").replace(/ه$/,"");
+ const M={"ألماني":"ألمانيا","روسي":"روسيا","بولندي":"بولندا","تشيكي":"التشيك","انجليزي":"بريطانيا","إنجليزي":"بريطانيا","بريطاني":"بريطانيا","فرنسي":"فرنسا","إيطالي":"إيطاليا","ايطالي":"إيطاليا","إسباني":"إسبانيا","اسباني":"إسبانيا","أوكراني":"أوكرانيا","هولندي":"هولندا","بلجيكي":"بلجيكا","سويسري":"سويسرا","نمساوي":"النمسا","سويدي":"السويد","دنماركي":"الدنمارك","نرويجي":"النرويج","فنلندي":"فنلندا","مجري":"المجر","روماني":"رومانيا","بلغاري":"بلغاريا","صربي":"صربيا","أمريكي":"أمريكا","امريكي":"أمريكا","كندي":"كندا","صيني":"الصين","ياباني":"اليابان","كوري":"كوريا","هندي":"الهند","تركي":"تركيا","كازاخستاني":"كازاخستان","ليتواني":"ليتوانيا","لاتفي":"لاتفيا","إستوني":"إستونيا","استوني":"إستونيا","سلوفاكي":"سلوفاكيا","بيلاروسي":"بيلاروسيا","سلوفيني":"سلوفينيا","كرواتي":"كرواتيا","يوناني":"اليونان","برتغالي":"البرتغال","أيرلندي":"أيرلندا","ايرلندي":"أيرلندا","أسترالي":"أستراليا","استرالي":"أستراليا","برازيلي":"البرازيل"};
+ const N={};Object.keys(M).forEach(k=>N[nk(k)]=M[k]);
+ return String(t||"").replace(/[^\s+،,\/\-]+/g,w=>N[nk(w)]||w)}
 drawHist();
 </script>
 </body>

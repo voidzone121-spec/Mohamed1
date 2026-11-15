@@ -91,6 +91,12 @@ details summary{cursor:pointer;color:var(--acc);font-size:14px}
 <div class="row"><button class="p" id="applyJson">تطبيق البيانات</button></div>
 <div class="note" id="jmsg"></div></details></div>
 
+<div class="card"><details><summary>استيراد العربيات من الموقع القديم</summary>
+<div class="note" style="line-height:1.9">الخطوات: (1) افتح الموقع القديم وسجّل دخول. (2) اضغط F12 ثم تبويب Console. (3) اكتب allow pasting وEnter لو طلبه، ثم الصق الأمر التالي وEnter: <code dir="ltr">copy(localStorage.getItem('registeredCars'))</code> (4) الصق هنا بـ Ctrl+V واضغط استيراد.</div>
+<label style="margin-top:8px">العربيات (JSON)<textarea id="carsIn" rows="5" dir="ltr"></textarea></label>
+<div class="row"><button class="p" id="impCars">استيراد العربيات</button></div>
+<div class="note" id="impmsg"></div></details></div>
+
 <div class="card"><h2>البيانات الثابتة</h2>
 <div class="g">
 <label>اسم شركة السياحة<input id="coName" value="اف تي اس ترافيل"></label>
@@ -485,6 +491,20 @@ function gfCountry(t){
  const M={"ألماني":"ألمانيا","روسي":"روسيا","بولندي":"بولندا","تشيكي":"التشيك","انجليزي":"بريطانيا","إنجليزي":"بريطانيا","بريطاني":"بريطانيا","فرنسي":"فرنسا","إيطالي":"إيطاليا","ايطالي":"إيطاليا","إسباني":"إسبانيا","اسباني":"إسبانيا","أوكراني":"أوكرانيا","هولندي":"هولندا","بلجيكي":"بلجيكا","سويسري":"سويسرا","نمساوي":"النمسا","سويدي":"السويد","دنماركي":"الدنمارك","نرويجي":"النرويج","فنلندي":"فنلندا","مجري":"المجر","روماني":"رومانيا","بلغاري":"بلغاريا","صربي":"صربيا","أمريكي":"أمريكا","امريكي":"أمريكا","كندي":"كندا","صيني":"الصين","ياباني":"اليابان","كوري":"كوريا","هندي":"الهند","تركي":"تركيا","كازاخستاني":"كازاخستان","ليتواني":"ليتوانيا","لاتفي":"لاتفيا","إستوني":"إستونيا","استوني":"إستونيا","سلوفاكي":"سلوفاكيا","بيلاروسي":"بيلاروسيا","سلوفيني":"سلوفينيا","كرواتي":"كرواتيا","يوناني":"اليونان","برتغالي":"البرتغال","أيرلندي":"أيرلندا","ايرلندي":"أيرلندا","أسترالي":"أستراليا","استرالي":"أستراليا","برازيلي":"البرازيل"};
  const N={};Object.keys(M).forEach(k=>N[nk(k)]=M[k]);
  return String(t||"").replace(/[^\s+،,\/\-]+/g,w=>N[nk(w)]||w)}
+/* استيراد العربيات من الموقع القديم */
+$("impCars").onclick=()=>{
+ const m=$("impmsg");let o;
+ try{o=JSON.parse($("carsIn").value.trim());if(typeof o==="string")o=JSON.parse(o)}catch(e){m.textContent="النص مش JSON صحيح، انسخه كامل من الأمر اللي فوق";return}
+ const arr=Array.isArray(o)?o:(o&&(o.cars||o.trips))||[];
+ if(!arr.length){m.textContent="مفيش عربيات في النص اللي لصقته";return}
+ const l=cars();let add=0,upd=0;
+ arr.forEach(x=>{const g=(a,b)=>String(x[a]!=null?x[a]:(x[b]!=null?x[b]:"")).trim();
+  const cnum=g("carNumber","car_number");if(!cnum)return;
+  let ct=normType(g("carType","car_type"));if(ct==="اوتوبيس")ct="اتوبيس";
+  const c={tco:g("carName","car_name"),ctype:ct,cnum,cbelong:g("carPlate","car_plate"),chassis:g("chassisNumber","chassis_number"),driver:g("driverName","driver_name"),dphone:g("driverPhone","driver_phone"),bdriver:g("backupDriverName","backup_driver_name"),bphone:g("backupDriverPhone","backup_driver_phone")};
+  const i=l.findIndex(y=>y.cnum===cnum);if(i>=0){l[i]=c;upd++}else{l.push(c);add++}});
+ lsSet("fts_cars",l);refreshCars();
+ m.textContent=`تم استيراد ${add+upd} عربية (${add} جديدة، ${upd} تحديث). جرّب تبحث عن عربية في قسم السيارة.`};
 drawHist();
 </script>
 </body>

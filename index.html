@@ -31,6 +31,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .miss.blk{background:#fdecea;color:#7a1410;border-color:#b42318}
 .miss.wrn{background:#fff6e0;color:#6b4700;border-color:#c98a00}
 .bad{outline:2px solid #b42318!important;border-color:#b42318!important}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:99;padding:16px}
+.cf{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:18px;max-width:420px;width:100%;line-height:1.8}
 .hi{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding:8px 0;font-size:13.5px}
 .st{display:flex;flex-wrap:wrap;gap:16px;font-size:14px;margin-bottom:6px}
 details summary{cursor:pointer;color:var(--acc);font-size:14px}
@@ -305,7 +307,7 @@ $("applyJson").onclick=()=>{
 /* ===== سجل 72 ساعة وحساب العربيات ===== */
 const H72=72*3600*1000;let curId=null;
 function hist(){const n=Date.now();const l=lsGet("fts_hist",[]).filter(h=>n-h.ts<H72);return l}
-function saveTrip(){const s=state();if(blocked())return false;if(!s.cnum.trim()){alert("اكتب رقم السيارة الأول");return false}
+function saveTrip(){const s=state();if(blocked())return false;
  let l=hist();if(curId&&l.some(h=>h.id===curId)){l=l.map(h=>h.id===curId?{id:h.id,ts:Date.now(),s}:h)}else{curId=Date.now();l.push({id:curId,ts:curId,s})}
  lsSet("fts_hist",l);drawHist();return true}
 function drawHist(){const fd=$("hfDate").value;const l=hist().filter(h=>!fd||h.s.date===fd).sort((a,b)=>b.ts-a.ts);costDraw(l);
@@ -482,7 +484,8 @@ function showMiss(focus){
  if(focus){m.forEach(x=>{const e=$(x[0]);if(e)e.classList.add("bad")});
   if(b.length){const f=$(b[0][0]);if(f){f.scrollIntoView({block:"center"});f.focus()}}}
  return b.length>0}
-function blocked(){return showMiss(true)}
+let force=false;
+function blocked(){return force?false:showMiss(true)}
 function dg(v){return String(v||"").replace(/[٠-٩]/g,c=>c.charCodeAt(0)-1632).replace(/[۰-۹]/g,c=>c.charCodeAt(0)-1776).replace(/\D/g,"")}
 showMiss(false);
 /* تحويل الجنسية لاسم الدولة لفورم GPS */
@@ -505,6 +508,25 @@ $("impCars").onclick=()=>{
   const i=l.findIndex(y=>y.cnum===cnum);if(i>=0){l[i]=c;upd++}else{l.push(c);add++}});
  lsSet("fts_cars",l);refreshCars();
  m.textContent=`تم استيراد ${add+upd} عربية (${add} جديدة، ${upd} تحديث). جرّب تبحث عن عربية في قسم السيارة.`};
+/* تأكيد المتابعة مع وجود نواقص */
+function started(){return ["pax","nat","guide","gphone","driver","dphone","cnum","tco","chassis","cbelong"].some(k=>$(k).value.trim())}
+function openConfirm(m,label,onYes){
+ let o=document.getElementById("cfov");if(o)o.remove();
+ o=document.createElement("div");o.id="cfov";o.className="ov";
+ o.innerHTML=`<div class="cf" role="dialog" aria-modal="true"><b>⚠ في بيانات ناقصة</b><p style="margin:8px 0">${m.map(x=>esc(x[1])).join("، ")}</p><p style="margin:0 0 4px">متأكد إنك عايز تكمّل (${esc(label)}) من غير ما تكملها؟</p><div class="row"><button class="p" id="cfY">أيوة، كمّل</button><button id="cfN">لا، هكمّل البيانات</button></div></div>`;
+ document.body.appendChild(o);
+ $("cfY").onclick=()=>{o.remove();onYes()};
+ $("cfN").onclick=()=>{o.remove();const f=$(m[0][0]);if(f){f.scrollIntoView({block:"center"});f.focus()}};
+ $("cfN").focus()}
+function intercept(id,label,runner,needData){
+ $(id).addEventListener("click",e=>{
+  const m=missing(state()).filter(x=>x[2]);
+  if(!m.length||(needData&&!started()))return;
+  e.stopImmediatePropagation();e.preventDefault();showMiss(true);
+  openConfirm(m,label,()=>{force=true;try{runner()}finally{force=false}})},true)}
+intercept("print","طباعة الإخطار",()=>{$("print").onclick();saveTrip()},false);
+intercept("save","حفظ الرحلة",()=>{$("save").onclick()},false);
+intercept("reset","رحلة جديدة",()=>{$("reset").onclick();curId=null;check()},true);
 drawHist();
 </script>
 </body>

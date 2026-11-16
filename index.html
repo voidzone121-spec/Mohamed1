@@ -349,7 +349,11 @@ function gfPairs(s){
  add("entry.100837855",(s.cbelong||"").replace(/[\d\s\-\/\.]+/g,"").split("").join(" "));
  add("entry.1699758489",en(s.cnum).replace(/\D/g,""));
  add("entry.342115608",en(s.chassis).replace(/\s+/g,""));
- add("entry.1971436968",gfCountry(s.nat));
+ {const parts=String(s.nat||"").split(/\s*(?:[+،,\/]|\sو\s)\s*/).map(x=>gfCountry(x.trim())).filter(Boolean);
+  const KNOWN=["ألمانيا"];
+  [...new Set(parts.filter(x=>KNOWN.includes(x)))].forEach(v=>add("entry.1971436968",v));
+  const oth=[...new Set(parts.filter(x=>!KNOWN.includes(x)))];
+  if(oth.length){add("entry.1971436968","__other_option__");add("entry.1971436968.other_option_response",oth.join(" - "))}}
  add("entry.1253472782",en(s.dphone).replace(/\D/g,""));
  add("entry.2118850643","مندوب سياحة خارجية");
  return p}
@@ -430,7 +434,7 @@ function updTrip(){const t=$("ttype").value==="توصيلة";
  $("tret").parentElement.style.display=t?"none":"";if(t)$("tret").value="";else applyTimes();render()}
 $("ttype").addEventListener("change",updTrip);
 const _ss=setState;setState=function(s){s=Object.assign({},s,{ctype:normType(s.ctype)});_ss(s);fixTo($("gfTo").value);updTrip()};
-fixTo($("gfTo").value);applyTimes();updTrip();
+fixTo($("gfTo").value);syncDirs();applyProg();applyTimes();updTrip();
 /* فلتر التقويم في سجل 72 ساعة */
 const dstr=o=>{const d=new Date();d.setDate(d.getDate()+o);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
 $("hfDate").addEventListener("change",drawHist);
@@ -527,6 +531,10 @@ function intercept(id,label,runner,needData){
 intercept("print","طباعة الإخطار",()=>{$("print").onclick();saveTrip()},false);
 intercept("save","حفظ الرحلة",()=>{$("save").onclick()},false);
 intercept("reset","رحلة جديدة",()=>{$("reset").onclick();curId=null;check()},true);
+/* منفذ الخروج: اختيار واحد بس، وتقدر تغيّره يدوي بعد التلقائي */
+document.querySelectorAll("[data-g=e]").forEach(x=>x.addEventListener("change",()=>{
+ if(x.checked)document.querySelectorAll("[data-g=e]").forEach(y=>{if(y!==x)y.checked=false});render()}));
+$("gfTo").addEventListener("change",()=>{$("progmsg").textContent="البرنامج بيتكتب تلقائي حسب الوجهة، وتقدر تعدله على الرحلة نفسها."});
 drawHist();
 </script>
 </body>

@@ -61,24 +61,31 @@ details summary{cursor:pointer;color:var(--acc);font-size:14px}
 }
 </style>
 <style>
-.s2{background:#fff;color:#000;width:210mm;height:297mm;padding:12mm 12mm 10mm;margin:0 auto 12px;font-size:12px;line-height:1.45;border:1px solid #bbb;display:flex;flex-direction:column;overflow:hidden;page-break-after:always;color-scheme:light}
+.s2{background:#fff;color:#000;width:210mm;height:297mm;padding:6mm 7mm 6mm 12mm;margin:0 auto 12px;font-size:12px;line-height:1.35;border:1px solid #bbb;display:flex;flex-direction:column;overflow:hidden;page-break-after:always;color-scheme:light;font-family:Tahoma,Arial,sans-serif}
 .s2:last-child{page-break-after:auto}
-.s2 table{width:100%;border-collapse:collapse;margin:0 0 4px}
-.s2 td{border:1px solid #000;padding:3px 6px;vertical-align:middle}
+.s2 table{width:100%;border-collapse:collapse;table-layout:fixed;margin:0 0 3px}
+.s2 td{border:1px solid #000;padding:3px 5px;vertical-align:middle;overflow-wrap:anywhere}
 .s2 .b{font-weight:bold}.s2 .c{text-align:center}
-.s2 .t{text-align:center;text-decoration:underline;font-size:17px;margin:4px 0 14px}
-.s2 .ad{display:flex;justify-content:space-between;font-size:13px}
-.s2 .h{display:flex;justify-content:space-between;align-items:center;font-weight:bold;font-size:14px;margin:6px 0 3px}
-.s2 .db{border:1px solid #000;padding:2px 10px;font-size:12px;font-weight:normal}
-.s2 .bl{color:#1f2fb5;font-weight:bold}
-.s2 .sg{display:flex;gap:14px;margin:6px 0 8px;align-items:flex-start}
-.s2 .sr{flex:0 0 36%}
-.s2 .stamp{border:1px solid #000;text-align:center;padding:14px 0;margin:8px 0}
-.s2 .dt{border:1px solid #000;padding:3px 10px;display:inline-block;font-size:11px}
-.s2 .sb{border:1px solid #000;padding:6px;width:40%}
-.s2 .ap{display:flex;gap:10px;margin-top:auto}
-.s2 .apb{border:1px solid #000;flex:0 0 31%;padding:6px;text-align:center;font-size:11.5px;height:55mm;color:#1f2fb5;font-weight:bold}
-.s2 .ln{margin-top:8px;text-align:right}
+.s2 .t{text-align:center;text-decoration:underline;font-size:15px;margin:12px 0 8px}
+.s2 .ad{font-size:12.5px;display:flex;justify-content:space-between}
+.s2 .nt{text-align:center;font-size:12.5px;margin:1px 0 6px}
+.s2 .l2{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;margin:1px 0 6px}
+.s2 .nt2{width:42%;margin-left:3%;text-align:center}
+.s2 .h{display:flex;justify-content:space-between;align-items:center;font-weight:bold;font-size:13.5px;margin:5px 0 3px}
+.s2 .db{border:1px solid #000;padding:2px 8px;width:29%;margin-left:-1.5%;display:flex;justify-content:center;gap:14px;font-weight:normal;font-size:10px}
+.s2 .db b{font-size:12px}
+.s2 .kind{font-size:16px;font-weight:bold;text-align:center}
+.s2 .prog{font-size:9.5px;font-weight:bold;text-align:center;line-height:1.35}
+.s2 .sm{font-size:10.5px;font-weight:bold}
+.s2 .sg{display:flex;gap:4%;margin:6px 0 0;align-items:flex-start}
+.s2 .sr{flex:0 0 31%;font-size:10px}
+.s2 .stamp{border:1px solid #000;text-align:center;padding:14px 0;margin:14px 8%;font-size:11px}
+.s2 .dt{border:1px solid #000;padding:2px 10px;font-size:10px;display:block;margin:0 8%}
+.s2 .sb{border:1px solid #000;padding:4px 8px;flex:0 0 31%;color:#1f2fb5;font-weight:bold}
+.s2 .sb .nm{font-size:15px;line-height:1.35}
+.s2 .ap{display:flex;gap:1%;margin-top:auto}
+.s2 .apb{border:1px solid #000;flex:0 0 31.3%;height:52mm;padding:5px 6px;text-align:center;font-size:11px;color:#1f2fb5;font-weight:bold}
+.s2 .ln{margin-top:7px;text-align:right}
 @media print{.s2{border:0;margin:0}}
 </style>
 </head>
@@ -226,8 +233,9 @@ function sheet(s,n){
  </section>`}
 function sheetN(s,n){
  const AD=["السيد / مدير إدارة تأمين الأفواج السياحية","السيد الأستاذ / أمين عام فرع غرفة شركات ووكالات السفر والسياحة بالبحر الأحمر","السيد الأستاذ / مدير عام مكتب وزارة السياحة بالبحر الأحمر"][n-1];
- const city=s.tcity||(s.gfFrom&&s.gfFrom!=="الغردقة"?s.gfFrom:"");
- const kind=esc(s.ttype)+(city?" "+esc(city):"");
+ const fr=s.tcity||(s.gfFrom&&s.gfFrom!=="الغردقة"?s.gfFrom:"");
+ const to=(s.gfTo||"").trim();
+ const kind=esc(s.ttype)+(fr?" "+esc(fr):"")+(to?(fr?" - ":" ")+esc(to):"");
  const tw=s.ttype==="توصيلة";
  const t=`<b>الذهاب:</b> ${esc(s.tgo)}${tw?"":"<br><b>العوده:</b> "+esc(s.tret)}`,tb=`<b>الذهاب:</b> :${tw?"":"<br><b>العوده:</b> :"}`;
  const ln=l=>`<div class="ln">${l} ..........................</div>`;
@@ -235,31 +243,35 @@ function sheetN(s,n){
  const cha=`<div class="apb">إعتماد فرع غرفة شركات ووكالات السفر والسياحة بالبحر الأحمر<br><u>بتمام المراجعة الإدارية والفنية</u>${ln("مراجع :")}${ln("مدخل بيانات :")}${ln("رئيس القسم :")}<br>الختم :</div>`;
  const min=`<div class="apb">الإعتماد النهائى لمكتب وزارة السياحة بالبحر الأحمر<br><u>بتمام المراجعة النهائية</u>${ln("التوقيع :")}<br>الختم :</div>`;
  const aps=[sec,cha,min].slice(0,n).join("");
+ const NT="نتقدم لسيادتكم بإخطارنا عن تنظيم رحله سياحيه";
+ const head=n===1?`<div class="ad"><span>${AD}</span></div><div class="nt" style="padding-right:14%">${NT}</div>`
+  :n===2?`<div class="ad" style="padding-right:8%;justify-content:flex-start"><span>${AD}</span></div><div class="l2"><span style="margin-right:13.5%">نموذج رقم (6)</span><span class="nt2">${NT}</span></div>`
+  :`<div class="ad"><span>${AD}</span><span style="margin-left:-1%">نموذج رقم (6)</span></div><div class="nt" style="padding-right:15%">${NT}</div>`;
+ const dir=(i)=>cb(s.d[i])+" "+DIRS[i];
  return `<section class="s2">
  <div class="t">إخطار عن رحله سياحيه إختياريه</div>
- <div class="ad"><b>${AD}</b>${n>1?'<b>نموذج رقم (6)</b>':''}</div>
- <div class="c b" style="margin:2px 0 6px">نتقدم لسيادتكم بإخطارنا عن تنظيم رحله سياحيه</div>
- <div class="h"><span>■ بيانات شركة السياحه:</span><span class="db">تاريخ الرحله &nbsp;&nbsp; ${fmt(s.date)}</span></div>
- <table>
- <tr><td class="b" style="width:22%">إسم شركة السياحة :</td><td class="c" style="width:34%">${esc(s.coName)}</td><td class="b" style="width:20%">رقم الترخيص :</td><td class="b c" style="width:24%">${esc(s.lic)}</td></tr>
- <tr><td class="b">عدد السائحين :</td><td>${esc(s.pax)}</td><td class="b">الجنسية :</td><td>${esc(s.nat)}</td></tr>
- <tr><td class="b">اسم المندوب / المرشد المرافق :</td><td>${esc(s.guide)}</td><td class="b">رقم تليفون المندوب / المرشد :</td><td>${esc(s.gphone)}</td></tr></table>
+ ${head}
+ <div class="h"><span>■ بيانات شركة السياحه:</span><span class="db">تاريخ الرحله <b>${fmt(s.date)}</b></span></div>
+ <table><colgroup><col style="width:25%"><col style="width:31.7%"><col style="width:25%"><col style="width:18.3%"></colgroup>
+ <tr style="height:32px"><td class="b">إسم شركة السياحة :</td><td class="c">${esc(s.coName)}</td><td class="b">رقم الترخيص :</td><td class="b c" style="font-size:13px">${esc(s.lic)}</td></tr>
+ <tr style="height:28px"><td class="b">عدد السائحين :</td><td class="c">${esc(s.pax)}</td><td class="b">الجنسية :</td><td class="c">${esc(s.nat)}</td></tr>
+ <tr style="height:32px"><td class="b">اسم المندوب / المرشد المرافق :</td><td class="c">${esc(s.guide)}</td><td class="b">رقم تليفون المندوب / المرشد :</td><td class="c">${esc(s.gphone)}</td></tr></table>
  <div class="h"><span>■ <u>بيانات شركة النقل</u></span></div>
- <table>
- <tr><td class="b" style="width:22%">إسم شركة النقل :</td><td colspan="3">${esc(s.tco)}</td></tr>
- <tr><td class="b" rowspan="2">نوع السياره:</td><td rowspan="2">${esc(s.ctype)}</td><td class="b" style="width:20%">رقم السياره :</td><td style="width:24%">${esc(s.cnum)}</td></tr>
- <tr><td class="b">الجهه التابعه لها :</td><td>${esc(s.cbelong)}</td></tr>
- <tr><td class="b">السائق الاساسي &nbsp; ${esc(s.driver)}</td><td>${esc(s.dphone)}</td><td>${esc(s.bdriver)}</td><td>${esc(s.bphone)}</td></tr></table>
+ <table><colgroup><col style="width:27.6%"><col style="width:23.7%"><col style="width:25.9%"><col style="width:22.8%"></colgroup>
+ <tr><td class="b">إسم شركة النقل :</td><td colspan="3">${esc(s.tco)}</td></tr>
+ <tr><td class="b" rowspan="2">نوع السياره:</td><td rowspan="2" class="c">${esc(s.ctype)}</td><td class="b">رقم السياره :</td><td class="c">${esc(s.cnum)}</td></tr>
+ <tr><td class="b">الجهه التابعه لها :</td><td class="c">${esc(s.cbelong)}</td></tr>
+ <tr style="height:32px"><td class="b">السائق الاساسي &nbsp; <span style="font-weight:normal">${esc(s.driver)}</span></td><td class="c">${esc(s.dphone)}</td><td class="c">${esc(s.bdriver)}</td><td class="c">${esc(s.bphone)}</td></tr></table>
  <div class="h"><u>بيانات الرحلة</u></div>
- <table>
- <tr><td class="b" style="width:16%">نوع الرحله :</td><td class="c b" style="width:34%;font-size:15px">${kind}</td><td class="b" style="width:14%">البرنامج / أماكن الإقامه :</td><td style="width:36%;font-size:11px">${esc(s.progOut).replace(/\n/g,"<br>")}</td></tr>
- <tr><td class="b">الإتجاه :</td><td colspan="3">${DIRS.map((v,i)=>cb(s.d[i])+" "+v).join(" &nbsp; ")}</td></tr>
- <tr><td class="b">منفذ الخروج :</td><td colspan="2" class="c">${cb(s.e[0])} ${EXITS[0]}</td><td class="c">${cb(s.e[1])} ${EXITS[1]} &nbsp; ${cb(s.e[2])} ${EXITS[2]}</td></tr>
- <tr><td class="b">توقيت الخروج من المنفذ :</td><td colspan="2">${s.e[0]?t:tb}<br><small>طريق القاهره مفتوح طوال 24 ساعه</small></td><td>${(s.e[1]||s.e[2])?t:tb}<br><small>طريق (سفاجا-الأقصر ومرسى علم - إدفو) مفتوح من الساعه 6 حتى 18 يوميا</small></td></tr>
- <tr><td colspan="4" class="b c">مع ملاحظة ضرورة الإلتزام بمرور السياره فى الذهاب والعوده من منفذ الخروج فى الميعاد المحدد مسبقا من قبل الشركه والمدون بإخطارها والمثبت بتصريح المرور</td></tr></table>
+ <table><colgroup><col style="width:22.4%"><col style="width:27.4%"><col style="width:4%"><col style="width:21.2%"><col style="width:25%"></colgroup>
+ <tr style="height:62px"><td class="b">نوع الرحله :</td><td class="kind">${kind}</td><td class="b" colspan="2">البرنامج / أماكن الإقامه :</td><td class="prog">${esc(s.progOut).replace(/\n/g,"<br>")}</td></tr>
+ <tr><td class="b">الإتجاه :</td><td colspan="2" class="sm">${dir(0)} &nbsp; ${dir(1)} &nbsp; ${dir(2)}</td><td colspan="2" class="sm">${dir(3)} &nbsp; ${dir(4)}</td></tr>
+ <tr><td class="b">منفذ الخروج :</td><td colspan="2" class="c sm">${cb(s.e[0])} ${EXITS[0]}</td><td colspan="2" class="c sm">${cb(s.e[1])} ${EXITS[1]} &nbsp; ${cb(s.e[2])} ${EXITS[2]}</td></tr>
+ <tr><td class="b">توقيت الخروج من المنفذ :</td><td colspan="2" class="c sm">${s.e[0]?t:tb}<br><small>طريق القاهره مفتوح طوال 24 ساعه</small></td><td colspan="2" class="c sm">${(s.e[1]||s.e[2])?t:tb}<br><small>طريق (سفاجا-الأقصر ومرسى علم - إدفو) مفتوح من الساعه 6 حتى 18 يوميا</small></td></tr>
+ <tr><td colspan="5" class="b c" style="font-size:10.5px">مع ملاحظة ضرورة الإلتزام بمرور السياره فى الذهاب والعوده من منفذ الخروج فى الميعاد المحدد مسبقا من قبل الشركه والمدون بإخطارها والمثبت بتصريح المرور</td></tr></table>
  <div class="sg">
-  <div class="sr"><div>توقيع مدير الشركه : ..................</div><div class="stamp">ختم الشركه</div><div class="dt">تحريرا فى : <b>${today()}</b></div></div>
-  <div class="sb"><div class="bl c"><u>مقدم الإخطار</u></div><div class="bl" style="font-size:15px">الإســم : ${esc(s.subName)}<br>التوقيع :<br>رقم البطاقه :<br>${esc(s.subId)}</div></div>
+  <div class="sr"><div style="font-size:10px">توقيع مدير الشركه : ......................</div><div class="stamp">ختم الشركه</div><div class="dt">تحريرا فى : <b>${today()}</b></div></div>
+  <div class="sb"><div class="c"><u style="font-size:11px">مقدم الإخطار</u></div><div class="nm">الإســم : ${esc(s.subName)}<br>التوقيع :<br>رقم البطاقه :<br>${esc(s.subId)}</div></div>
  </div>
  <div class="ap">${aps}</div>
  </section>`}

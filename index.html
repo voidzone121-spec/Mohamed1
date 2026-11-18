@@ -122,8 +122,6 @@ details summary{cursor:pointer;color:var(--acc);font-size:14px}
 <input id="tcity" type="hidden">
 <label>عدد السائحين<input id="pax" inputmode="numeric"></label>
 <label>الجنسية<input id="nat"></label>
-<label>اسم المندوب / المرشد<input id="guide"></label>
-<label>تليفون المندوب / المرشد<input id="gphone" inputmode="tel"></label>
 <label>البرنامج / أماكن الإقامة<textarea id="prog" rows="2"></textarea></label>
 <label id="progExtraL" style="display:none">إضافة برنامج للتوصيلة (اختياري)<textarea id="progExtra" rows="2"></textarea></label>
 <label>من (بداية الرحلة)<select id="gfFrom"></select></label>
@@ -148,6 +146,8 @@ details summary{cursor:pointer;color:var(--acc);font-size:14px}
 <label>حروف العربية<input id="cbelong"></label>
 <label>رقم السيارة<input id="cnum"></label>
 <label>رقم الشاسيه<input id="chassis" dir="ltr"></label>
+<label>اسم المندوب / المرشد<input id="guide"></label>
+<label>رقم المندوب / المرشد<input id="gphone" inputmode="tel" dir="ltr"></label>
 <label>السائق الأساسي<input id="driver"></label>
 <label>رقم السائق الأساسي (واتساب)<input id="dphone" inputmode="tel" dir="ltr"></label>
 <label>السائق الاحتياطي<input id="bdriver"></label>
@@ -169,7 +169,7 @@ details summary{cursor:pointer;color:var(--acc);font-size:14px}
 </div>
 
 <div class="card"><h2>تصاريح آخر 72 ساعة</h2>
-<div class="row" style="margin:0 0 8px;align-items:end"><label>تاريخ الرحلة (للمراجعة)<input type="date" id="hfDate"></label><button id="hfToday">اليوم</button><button id="hfYest">أمس</button><button id="hfAll">الكل</button></div>
+<div class="row" style="margin:0 0 8px;align-items:end"><label>اليوم اللي اتسجلت فيه التصاريح (للمراجعة)<input type="date" id="hfDate"></label><button id="hfToday">اليوم</button><button id="hfYest">أمس</button><button id="hfAll">الكل</button></div>
 <div class="st" id="stats"></div>
 <div id="costBox"></div>
 <details style="margin:8px 0"><summary>أسعار العربيات (تقدر تعدّلها)</summary><div class="g" style="margin-top:8px"><label>ليموزين<input class="prc" data-t="ليموزين" inputmode="numeric"></label><label>ميكروباص<input class="prc" data-t="ميكروباص" inputmode="numeric"></label><label>كوستر<input class="prc" data-t="كوستر" inputmode="numeric"></label><label>اتوبيس<input class="prc" data-t="اتوبيس" inputmode="numeric"></label></div></details>
@@ -282,9 +282,9 @@ function cars(){return lsGet("fts_cars",[])}
 function refreshCars(){$("carlist").innerHTML=cars().map(c=>`<option value="${esc(c.cnum)} - ${esc(c.driver)}">`).join("")}
 $("q").addEventListener("input",()=>{const v=$("q").value.trim();if(!v)return;
  const c=cars().find(c=>v===c.cnum+" - "+c.driver||c.cnum===v||c.driver===v);
- if(c){["tco","ctype","cnum","cbelong","driver","chassis","dphone","bdriver","bphone"].forEach(k=>$(k).value=(k==="ctype"?normType(c[k]):c[k])||"");render()}});
+ if(c){["tco","ctype","cnum","cbelong","driver","chassis","dphone","bdriver","bphone"].forEach(k=>$(k).value=(k==="ctype"?normType(c[k]):c[k])||"");["guide","gphone"].forEach(k=>{if(c[k]!=null)$(k).value=c[k]});render()}});
 $("savecar").onclick=()=>{const n=$("cnum").value.trim();if(!n){alert("اكتب رقم السيارة أولا");return}
- const c={};["tco","ctype","cnum","cbelong","driver","chassis","dphone","bdriver","bphone"].forEach(k=>c[k]=$(k).value);
+ const c={};["tco","ctype","cnum","cbelong","driver","chassis","dphone","bdriver","bphone","guide","gphone"].forEach(k=>c[k]=$(k).value);
  const l=cars().filter(x=>x.cnum!==n);l.push(c);lsSet("fts_cars",l);refreshCars();alert("تم حفظ السيارة")};
 $("delcar").onclick=()=>{const n=$("cnum").value.trim();lsSet("fts_cars",cars().filter(x=>x.cnum!==n));refreshCars()};
 $("print").onclick=()=>{render();if(blocked())return;const w=window.open("","_blank");
@@ -322,11 +322,11 @@ function hist(){const n=Date.now();const l=lsGet("fts_hist",[]).filter(h=>n-h.ts
 function saveTrip(){const s=state();if(blocked())return false;
  let l=hist();if(curId&&l.some(h=>h.id===curId)){l=l.map(h=>h.id===curId?{id:h.id,ts:Date.now(),s}:h)}else{curId=Date.now();l.push({id:curId,ts:curId,s})}
  lsSet("fts_hist",l);drawHist();return true}
-function drawHist(){const fd=$("hfDate").value;const l=hist().filter(h=>!fd||h.s.date===fd).sort((a,b)=>b.ts-a.ts);costDraw(l);
+function drawHist(){const fd=$("hfDate").value;const l=hist().filter(h=>!fd||dOf(h.id)===fd).sort((a,b)=>b.ts-a.ts);costDraw(l);
  const cs=new Set(l.map(h=>h.s.cnum.trim()));
  const pax=l.reduce((t,h)=>t+(parseInt(h.s.pax)||0),0);
  $("stats").innerHTML=`<span>عدد الرحلات: <b>${l.length}</b></span><span>عدد العربيات: <b>${cs.size}</b></span><span>إجمالي السائحين: <b>${pax}</b></span>`;
- $("hist").innerHTML=l.length?l.map(h=>`<div class="hi"><span>${esc(fmt(h.s.date))} | ${esc(h.s.ttype)} ${esc(h.s.tcity)} | عربية ${esc(h.s.cnum)} | ${esc(h.s.driver)} | ${esc(h.s.pax)} سائح</span><span><button data-o="${h.id}">فتح</button> <button data-x="${h.id}">حذف</button></span></div>`).join(""):'<div class="note">مفيش رحلات محفوظة في آخر 72 ساعة.</div>';
+ $("hist").innerHTML=l.length?l.map(h=>`<div class="hi"><span>${esc(fmt(h.s.date))} | ${esc(h.s.ttype)} ${esc(h.s.tcity)} | عربية ${esc(h.s.cnum)} | ${esc(h.s.driver)} | ${esc(h.s.pax)} سائح | <small>اتسجلت ${new Date(h.id).toLocaleString("ar-EG",{day:"numeric",month:"numeric",hour:"2-digit",minute:"2-digit"})}</small></span><span><button data-o="${h.id}">فتح</button> <button data-x="${h.id}">حذف</button></span></div>`).join(""):'<div class="note">مفيش رحلات محفوظة في آخر 72 ساعة.</div>';
  lsSet("fts_hist",hist());check()}
 $("hist").addEventListener("click",e=>{const o=e.target.dataset.o,x=e.target.dataset.x;
  if(o){const h=hist().find(h=>String(h.id)===o);if(h){setState(h.s);curId=h.id;render();window.scrollTo(0,0)}}
@@ -521,7 +521,7 @@ $("impCars").onclick=()=>{
   const cnum=g("carNumber","car_number");if(!cnum)return;
   let ct=normType(g("carType","car_type"));if(ct==="اوتوبيس")ct="اتوبيس";
   const c={tco:g("carName","car_name"),ctype:ct,cnum,cbelong:g("carPlate","car_plate"),chassis:g("chassisNumber","chassis_number"),driver:g("driverName","driver_name"),dphone:g("driverPhone","driver_phone"),bdriver:g("backupDriverName","backup_driver_name"),bphone:g("backupDriverPhone","backup_driver_phone")};
-  const i=l.findIndex(y=>y.cnum===cnum);if(i>=0){l[i]=c;upd++}else{l.push(c);add++}});
+  const i=l.findIndex(y=>y.cnum===cnum);if(i>=0){l[i]=Object.assign({},l[i],c);upd++}else{l.push(c);add++}});
  lsSet("fts_cars",l);refreshCars();
  m.textContent=`تم استيراد ${add+upd} عربية (${add} جديدة، ${upd} تحديث). جرّب تبحث عن عربية في قسم السيارة.`};
 /* تأكيد المتابعة مع وجود نواقص */
@@ -547,6 +547,12 @@ intercept("reset","رحلة جديدة",()=>{$("reset").onclick();curId=null;che
 document.querySelectorAll("[data-g=e]").forEach(x=>x.addEventListener("change",()=>{
  if(x.checked)document.querySelectorAll("[data-g=e]").forEach(y=>{if(y!==x)y.checked=false});render()}));
 $("gfTo").addEventListener("change",()=>{$("progmsg").textContent="البرنامج بيتكتب تلقائي حسب الوجهة، وتقدر تعدله على الرحلة نفسها."});
+/* رحلة جديدة: طبّق افتراضيات الوجهة الحالية */
+function applyDest(){const to=$("gfTo").value;syncDirs();
+ if(to in EX2)document.querySelectorAll("[data-g=e]").forEach((x,k)=>x.checked=(k===EX2[to]));
+ applyProg();applyTimes();updTrip();render()}
+const _rst=$("reset").onclick;$("reset").onclick=()=>{_rst();applyDest()};
+function dOf(t){const d=new Date(t);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 drawHist();
 </script>
 </body>
